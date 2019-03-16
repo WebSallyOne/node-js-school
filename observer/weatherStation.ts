@@ -1,6 +1,6 @@
 import { IObservable, IObserver, IWeatherData } from './contracts';
 
-export class WeatherStation implements IObservable {
+class WeatherStation implements IObservable {
     private _observers: Set<IObserver>;
     private _data: IWeatherData;
 
@@ -26,3 +26,7 @@ export class WeatherStation implements IObservable {
         this.NotifyObservers();
     }
 }
+
+const weatherStation = new WeatherStation();
+
+export { weatherStation };

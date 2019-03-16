@@ -1,8 +1,6 @@
-import { WeatherStation } from './weatherStation';
+import { weatherStation } from './weatherStation';
 import { MobileScreen } from './mobileScreen';
 import { TabletScreen } from './tabletScreen';
-
-const weatherStation = new WeatherStation();
 
 const mobileScreen = new MobileScreen();
 const tabletScreen = new TabletScreen();
