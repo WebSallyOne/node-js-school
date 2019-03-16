@@ -18,5 +18,3 @@ dist/**/*
 
 # Logging files
 *.log
-
-observer_eventEmitter
