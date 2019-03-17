@@ -2,7 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { Length, IsNumberString } from 'class-validator';
 import { User } from './user';
 
-@Entity()
+@Entity('Books')
 export class Book {
     @PrimaryGeneratedColumn()
     id: number;

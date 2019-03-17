@@ -1,6 +1,5 @@
 import * as Koa from 'koa';
 import * as jwt from 'koa-jwt';
-import * as bodyParser from 'koa-bodyparser';
 import * as helmet from 'koa-helmet';
 import * as cors from '@koa/cors';
 import * as winston from 'winston';
@@ -11,7 +10,7 @@ import * as PostgressConnectionStringParser from 'pg-connection-string';
 
 import { logger } from './logging';
 import { config } from './config';
-import { router } from './routes/routes';
+import { router, mediaRouter } from './routes/routes';
 
 // Load environment variables from .env file, where API keys and passwords are configured
 dotenv.config({ path: '.env' });
@@ -51,14 +50,12 @@ createConnection({
     // Logger middleware -> use winston as logger (logging.ts with config)
     app.use(logger(winston));
 
-    // Enable bodyParser with default options
-    app.use(bodyParser());
-
     // JWT middleware -> below this line routes are only reached if JWT token is valid, secret as env variable
     app.use(jwt({ secret: config.jwtSecret }));
 
     // this routes are protected by the JWT middleware, also include middleware to respond with "Method Not Allowed - 405".
     app.use(router.routes()).use(router.allowedMethods());
+    app.use(mediaRouter.routes()).use(mediaRouter.allowedMethods());
 
     app.listen(config.port);
 
