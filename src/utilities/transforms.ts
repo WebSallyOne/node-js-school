@@ -12,7 +12,7 @@ const createCustomTransform = (chunkEditor: (chunkString: string) => string) =>
 
 const allowerTransforms: object = {
     upperCase: () => createCustomTransform((chunkString: string) => chunkString.toUpperCase()),
-    lowerCase: () => createCustomTransform((chunkString: string) => chunkString.toUpperCase()),
+    lowerCase: () => createCustomTransform((chunkString: string) => chunkString.toLowerCase()),
     removeSpaces: () => createCustomTransform((chunkString: string) => chunkString.replace(/\s/g, '')),
     encrypt: () => crypto.createCipher('aes-256-cbc', crypto.createHash('sha256').update('some-password').digest()),
     decrypt: () => crypto.createDecipher('aes-256-cbc', crypto.createHash('sha256').update('some-password').digest()),
