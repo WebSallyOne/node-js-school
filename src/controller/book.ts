@@ -86,13 +86,10 @@ export default class BookController {
             return;
         }
 
-        const bookRepository: Repository<Book> = getManager().getRepository(Book);
-
         const bookToBeSaved: Book = new Book();
         bookToBeSaved.name = ctx.request.body.name;
         bookToBeSaved.description = ctx.request.body.description;
         bookToBeSaved.date = Date.now().toString();
-
         bookToBeSaved.user = user;
 
         const errors: ValidationError[] = await validate(bookToBeSaved); // errors is an array of validation errors
@@ -103,6 +100,7 @@ export default class BookController {
             return;
         }
 
+        const bookRepository: Repository<Book> = getManager().getRepository(Book);
         const book = await bookRepository.save(bookToBeSaved);
         ctx.status = status.CREATED;
         ctx.body = book;
@@ -121,8 +119,6 @@ export default class BookController {
             return;
         }
 
-        const bookRepository: Repository<Book> = getManager().getRepository(Book);
-
         const bookToBeUpdated: Book = new Book();
 
         bookToBeUpdated.id = +ctx.params.bid || 0;
@@ -137,6 +133,8 @@ export default class BookController {
             ctx.body = errors;
             return;
         }
+
+        const bookRepository: Repository<Book> = getManager().getRepository(Book);
 
         if (!await bookRepository.findOne(bookToBeUpdated.id)) {
             ctx.status = status.BAD_REQUEST;
