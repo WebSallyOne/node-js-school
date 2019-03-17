@@ -17,8 +17,8 @@ const allowerTransforms: object = {
     removeSpaces: () => createCustomTransform((chunkString: string) => chunkString.replace(/\s/g, '')),
     encrypt: () => crypto.createCipher('aes-256-cbc', crypto.createHash('sha256').update(config.cryptPassword).digest()),
     decrypt: () => crypto.createDecipher('aes-256-cbc', crypto.createHash('sha256').update(config.cryptPassword).digest()),
-    gzip: () => createGzip(),
-    unzip: () => createUnzip()
+    gzip: createGzip,
+    unzip: createUnzip
 };
 
 export { allowerTransforms };
