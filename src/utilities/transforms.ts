@@ -1,7 +1,6 @@
 import { Transform, TransformCallback } from 'stream';
 import { createGzip, createUnzip } from 'zlib';
 import * as crypto from 'crypto';
-import { config } from './../config';
 
 const createCustomTransform = (chunkEditor: (chunkString: string) => string) =>
     new Transform({
@@ -15,8 +14,8 @@ const allowerTransforms: object = {
     upperCase: () => createCustomTransform((chunkString: string) => chunkString.toUpperCase()),
     lowerCase: () => createCustomTransform((chunkString: string) => chunkString.toUpperCase()),
     removeSpaces: () => createCustomTransform((chunkString: string) => chunkString.replace(/\s/g, '')),
-    encrypt: () => crypto.createCipher('aes-256-cbc', crypto.createHash('sha256').update(config.cryptPassword).digest()),
-    decrypt: () => crypto.createDecipher('aes-256-cbc', crypto.createHash('sha256').update(config.cryptPassword).digest()),
+    encrypt: () => crypto.createCipher('aes-256-cbc', crypto.createHash('sha256').update('some-password').digest()),
+    decrypt: () => crypto.createDecipher('aes-256-cbc', crypto.createHash('sha256').update('some-password').digest()),
     gzip: createGzip,
     unzip: createUnzip
 };
