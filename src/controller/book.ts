@@ -7,17 +7,9 @@ import status = require('http-status');
 
 export default class BookController {
 
-    private static async checkForUserExist(ctx: BaseContext) {
+    private static async getUser(ctx: BaseContext) {
         const userRepository: Repository<User> = getManager().getRepository(User);
-        const user: User = await userRepository.findOne(+ctx.params.uid || 0);
-
-        if (!user) {
-            ctx.status = status.NOT_FOUND;
-            ctx.body = 'The user you are trying to retrieve doesn\'t exist in the db';
-            return false;
-        }
-
-        return true;
+        return await userRepository.findOne(+ctx.params.uid || 0);
     }
 
     private static checkUserPermission(ctx: BaseContext) {
@@ -31,30 +23,45 @@ export default class BookController {
     }
 
     public static async getBooks(ctx: BaseContext) {
-        const userExists = await BookController.checkForUserExist(ctx);
+        const user = await BookController.getUser(ctx);
 
-        if (!userExists) {
+        if (!user) {
+            ctx.status = status.NOT_FOUND;
+            ctx.body = 'The user you are trying to retrieve doesn\'t exist in the db';
             return;
         }
 
         const bookRepository: Repository<Book> = getManager().getRepository(Book);
 
-        const books: Book[] = await bookRepository.find();
+        const books: Book[] = await bookRepository.find({
+            relations: ['user'],
+            where: {
+                user: user
+            }
+        });
 
         ctx.status = status.OK;
         ctx.body = books;
     }
 
     public static async getBook(ctx: BaseContext) {
-        const userExists = await BookController.checkForUserExist(ctx);
+        const user = await BookController.getUser(ctx);
 
-        if (!userExists) {
+        if (!user) {
+            ctx.status = status.NOT_FOUND;
+            ctx.body = 'The user you are trying to retrieve doesn\'t exist in the db';
             return;
         }
 
         const bookRepository: Repository<Book> = getManager().getRepository(Book);
 
-        const book: Book = await bookRepository.findOne(+ctx.params.bid || 0);
+        const book: Book = await bookRepository.findOne({
+            relations: ['user'],
+            where: {
+                id: +ctx.params.bid || 0,
+                user: user
+            }
+        });
 
         if (!book) {
             ctx.status = status.NOT_FOUND;
@@ -71,9 +78,11 @@ export default class BookController {
         //     return;
         // }
 
-        const userExists = await BookController.checkForUserExist(ctx);
+        const user = await BookController.getUser(ctx);
 
-        if (!userExists) {
+        if (!user) {
+            ctx.status = status.NOT_FOUND;
+            ctx.body = 'The user you are trying to retrieve doesn\'t exist in the db';
             return;
         }
 
@@ -83,8 +92,6 @@ export default class BookController {
         bookToBeSaved.name = ctx.request.body.name;
         bookToBeSaved.description = ctx.request.body.description;
         bookToBeSaved.date = Date.now().toString();
-
-        const user: User = await getManager().getRepository(User).findOne(+ctx.params.uid);
 
         bookToBeSaved.user = user;
 
@@ -106,9 +113,11 @@ export default class BookController {
         //     return;
         // }
 
-        const userExists = await BookController.checkForUserExist(ctx);
+        const user = await BookController.getUser(ctx);
 
-        if (!userExists) {
+        if (!user) {
+            ctx.status = status.NOT_FOUND;
+            ctx.body = 'The user you are trying to retrieve doesn\'t exist in the db';
             return;
         }
 
@@ -145,9 +154,11 @@ export default class BookController {
         //     return;
         // }
 
-        const userExists = await BookController.checkForUserExist(ctx);
+        const user = await BookController.getUser(ctx);
 
-        if (!userExists) {
+        if (!user) {
+            ctx.status = status.NOT_FOUND;
+            ctx.body = 'The user you are trying to retrieve doesn\'t exist in the db';
             return;
         }
 
